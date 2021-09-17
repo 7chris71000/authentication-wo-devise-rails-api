@@ -4,23 +4,28 @@ class ItemsController < ApplicationController
   # GET /items
   def index
     @items = Item.all
-
-    render json: @items
+    @items.each.with_index do |item, index|
+      @items[index].encrypt_password = params[:encrypt_password]
+    end
   end
 
   # GET /items/1
   def show
-    render json: @item
   end
 
   # POST /items
   def create
-    @item = Item.new(item_params)
+    if check_for_same_password
+      @item = Item.new(item_params)
+      @item.encrypt_password = params[:encrypt_password]
 
-    if @item.save
-      render json: @item, status: :created, location: @item
+      if @item.save
+        render :show, status: :created
+      else
+        render json: @item.errors, status: :unprocessable_entity
+      end
     else
-      render json: @item.errors, status: :unprocessable_entity
+      render json: { error: "Authentication Error: Password Failure" }, status: :unauthorized
     end
   end
 
@@ -36,16 +41,34 @@ class ItemsController < ApplicationController
   # DELETE /items/1
   def destroy
     @item.destroy
+
+    @items = Item.all
+    @items.each.with_index do |item, index|
+      @items[index].encrypt_password = params[:encrypt_password]
+    end
+
+    render :index
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_item
-      @item = Item.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def item_params
-      params.require(:item).permit(:name, :price_cents)
+  def set_item
+    @item = Item.find(params[:id])
+    @item.encrypt_password = params[:encrypt_password]
+  end
+
+  def item_params
+    params.require(:item).permit(:name,
+                                 :price_cents,
+                                 :profit_margin,
+                                 :description)
+  end
+
+  def check_for_same_password
+    if @current_user && @current_user.authenticate(params[:encrypt_password])
+      true
+    else
+      false
     end
+  end
 end
