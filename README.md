@@ -36,3 +36,9 @@ Providing an incorrect password in the `encrypt_password` param will return an e
   "encrypt_password": "password" // the users password, provided by the user
 }
 ```
+
+# Setup
+
+## Env
+
+- convert the .env.tmpl file to .env and add variables
