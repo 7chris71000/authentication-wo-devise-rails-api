@@ -1,13 +1,15 @@
 class AuthorizeApiRequest
   prepend SimpleCommand
-  attr_reader :headers # we only want to be able to read the values from the header
+  attr_reader :headers, :user # we only want to be able to read the values from the header
 
   def initialize(headers = {})
     @headers = headers
+    @user = nil
   end
 
   def call
-    user
+    get_user
+    verify_rate_limit
   end
 
   private
@@ -24,16 +26,31 @@ class AuthorizeApiRequest
     @decoded_auth_token ||= JsonWebToken.decode(http_auth_header)
   end
 
-  def user
+  def get_user
     if decoded_auth_token
       @user ||= User.find(@decoded_auth_token[:user_id])
     end
 
-    if @user.present?
-      return @user
-    else
+    if !@user.present?
       errors.add(:token, "Invalid token")
-      return nil
+    end
+  end
+
+  def verify_rate_limit
+    # use redis to store the number of requests per headers["Authorization"]
+    # if the number of requests is greater than 1000, return an error
+    redis = Redis.new
+
+    if redis.get(headers["Authorization"])
+      if redis.get(headers["Authorization"]).to_i > 1000
+        errors.add(:rate_limit, "Rate limit exceeded")
+      else
+        redis.incr(headers["Authorization"])
+      end
+    else
+      redis.set(headers["Authorization"], 1)
+      redis.expire(headers["Authorization"], 60) # expire in 60 seconds
+      # TODO: check if this works 
     end
   end
 end
