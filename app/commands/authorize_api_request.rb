@@ -42,15 +42,15 @@ class AuthorizeApiRequest
     redis = Redis.new
 
     if redis.get(headers["Authorization"])
-      if redis.get(headers["Authorization"]).to_i > 1000
+      if redis.get(headers["Authorization"]).to_i > 5
         errors.add(:rate_limit, "Rate limit exceeded")
       else
         redis.incr(headers["Authorization"])
       end
     else
+      puts "\n setting redis key at time: #{Time.now} for key #{headers["Authorization"]} \n\n"
       redis.set(headers["Authorization"], 1)
       redis.expire(headers["Authorization"], 60) # expire in 60 seconds
-      # TODO: check if this works 
     end
   end
 end
