@@ -20,7 +20,6 @@ gem "simple_command"
 gem "lockbox"
 gem "rabl"
 
-gem "redis-rails"
 gem "redis"
 
 # Use Active Storage variant
