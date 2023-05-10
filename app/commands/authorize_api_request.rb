@@ -43,7 +43,7 @@ class AuthorizeApiRequest
 
     if redis.get(headers["Authorization"])
       if redis.get(headers["Authorization"]).to_i > 5
-        errors.add(:rate_limit, "Rate limit exceeded")
+        errors.add(:rate_limit, "Rate limit exceeded. Try again in #{redis.ttl(headers["Authorization"])} seconds")
       else
         redis.incr(headers["Authorization"])
       end
