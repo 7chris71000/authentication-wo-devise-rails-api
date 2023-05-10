@@ -5,9 +5,19 @@ class ApplicationController < ActionController::API
   private
     def authenticate_request
       # request.headers is provided by rails
-      @current_user = AuthorizeApiRequest.call(request.headers).result
-      if !@current_user
-        render json: { error: 'Not Authorized' }, status: 401
+      authorize_api_request = AuthorizeApiRequest.call(request.headers) 
+      if authorize_api_request.errors.present?
+        request_errors = authorize_api_request.errors
+
+        if request_errors[:token].present?
+          render json: { error: request_errors[:token] }, status: 401
+        elsif request_errors[:rate_limit].present?
+          render json: { error: request_errors[:rate_limit] }, status: 429
+        else
+          render json: { error: "Not Authorized" }, status: 401
+        end
+      else
+        @current_user = authorize_api_request.user
       end
     end
 end
