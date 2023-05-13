@@ -1,3 +1,11 @@
+# build with dockerfile first then run everything here with the following
+# build with docker compose up --build
+# Windows issue with port 3000 authorization issue
+# open cmd as admin and run the following
+# net stop winnat
+# run `docker compose up --build` in wsl terminal
+# net start winnat
+
 version: "3.9"
 
 services:
