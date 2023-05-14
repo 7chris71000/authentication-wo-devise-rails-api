@@ -8,6 +8,7 @@ class AuthorizeApiRequest
   end
 
   def call
+    puts "TEST\n\n\n\n\n\n\n\n"
     get_user
     verify_rate_limit
   end
@@ -39,7 +40,9 @@ class AuthorizeApiRequest
   def verify_rate_limit
     # use redis to store the number of requests per headers["Authorization"]
     # if the number of requests is greater than 1000, return an error
-    redis = Redis.new
+    puts "TEST\n\n\n\n\n\n\n\n"
+    redis = Redis.new(host: "0.0.0.0", port: 6379)
+
 
     if redis.get(headers["Authorization"])
       if redis.get(headers["Authorization"]).to_i > 5
