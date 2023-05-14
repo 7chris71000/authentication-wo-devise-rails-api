@@ -8,7 +8,6 @@ class AuthorizeApiRequest
   end
 
   def call
-    puts "TEST\n\n\n\n\n\n\n\n"
     get_user
     verify_rate_limit
   end
