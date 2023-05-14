@@ -40,9 +40,9 @@ class AuthorizeApiRequest
   def verify_rate_limit
     # use redis to store the number of requests per headers["Authorization"]
     # if the number of requests is greater than 1000, return an error
-    puts "TEST\n\n\n\n\n\n\n\n"
-    redis = Redis.new(host: "0.0.0.0", port: 6379)
 
+    # Must use the url option to connect to the redis container in docker-compose
+    redis = Redis.new(url: ENV["REDIS_URL"])
 
     if redis.get(headers["Authorization"])
       if redis.get(headers["Authorization"]).to_i > 5
