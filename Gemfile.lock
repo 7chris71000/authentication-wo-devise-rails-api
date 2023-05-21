@@ -70,11 +70,19 @@ GEM
     connection_pool (2.4.0)
     crass (1.0.6)
     date (3.3.3)
+    diff-lcs (1.5.0)
     dotenv (2.8.1)
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
       railties (>= 3.2)
     erubi (1.12.0)
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
+    faker (3.2.0)
+      i18n (>= 1.8.11, < 2)
     ffi (1.15.5)
     globalid (1.1.0)
       activesupport (>= 5.0)
@@ -159,6 +167,23 @@ GEM
       redis-client (>= 0.9.0)
     redis-client (0.14.1)
       connection_pool
+    rspec-core (3.12.2)
+      rspec-support (~> 3.12.0)
+    rspec-expectations (3.12.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-mocks (3.12.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-rails (6.0.0)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
+      railties (>= 6.1)
+      rspec-core (~> 3.11)
+      rspec-expectations (~> 3.11)
+      rspec-mocks (~> 3.11)
+      rspec-support (~> 3.11)
+    rspec-support (3.12.0)
     simple_command (1.0.1)
     spring (4.1.1)
     sprockets (4.2.0)
@@ -190,6 +215,8 @@ DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
   dotenv-rails
+  factory_bot_rails
+  faker
   jwt (~> 2.2)
   listen (~> 3.3)
   lockbox
@@ -198,6 +225,7 @@ DEPENDENCIES
   rabl
   rails (~> 6.1.4)
   redis
+  rspec-rails (= 6.0.0)
   simple_command
   spring
   sqlite3 (~> 1.4)
