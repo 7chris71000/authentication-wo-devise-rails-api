@@ -21,6 +21,7 @@ gem "lockbox"
 gem "rabl"
 
 gem "redis"
+gem "mock_redis"
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
